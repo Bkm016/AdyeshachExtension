@@ -45,6 +45,7 @@ class AdyTags : Trait(), Listener {
                 data.set(entityInstance.uniqueId, null)
             } else {
                 data.set(entityInstance.uniqueId, it)
+                refresh(entityInstance)
             }
             player.sendLocale("trait-tags-finish")
         }
