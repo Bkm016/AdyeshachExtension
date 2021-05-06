@@ -54,9 +54,7 @@ class AdyPlaceholder : Trait(), Listener {
     fun e(e: AdyeshachEntityTickEvent) {
         val entity = e.entity
         if (entity.isPapi() && entity.isPapiNext()) {
-            if (entity is AdyHuman) {
-                entity.setName(entity.getName())
-            } else {
+            if (entity !is AdyHuman) {
                 entity.setCustomName(entity.getCustomName())
             }
         }
