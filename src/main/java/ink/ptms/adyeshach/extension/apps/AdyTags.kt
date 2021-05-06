@@ -1,19 +1,21 @@
-package ink.ptms.adyeshach.addon.tags
+package ink.ptms.adyeshach.extension.apps
 
 import ink.ptms.adyeshach.api.AdyeshachAPI
 import ink.ptms.adyeshach.api.event.AdyeshachEntitySpawnEvent
 import ink.ptms.adyeshach.api.event.AdyeshachEntityTeleportEvent
-import ink.ptms.adyeshach.api.event.AdyeshachEntityVisibleEvent
 import ink.ptms.adyeshach.common.entity.EntityInstance
+import ink.ptms.adyeshach.common.util.Inputs
+import ink.ptms.adyeshach.internal.trait.KnownTraits
+import ink.ptms.adyeshach.internal.trait.Trait
 import io.izzel.taboolib.kotlin.asList
 import io.izzel.taboolib.kotlin.colored
-import io.izzel.taboolib.module.command.lite.CommandBuilder
+import io.izzel.taboolib.kotlin.sendLocale
 import io.izzel.taboolib.module.hologram.Hologram
 import io.izzel.taboolib.module.hologram.THologram
 import io.izzel.taboolib.module.inject.TFunction
-import io.izzel.taboolib.module.inject.TInject
 import io.izzel.taboolib.module.inject.TListener
 import io.izzel.taboolib.module.inject.TSchedule
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import java.util.*
@@ -24,23 +26,35 @@ import kotlin.collections.HashMap
  * @since 2021/4/19 1:06 上午
  */
 @TListener
-class General : Listener {
-
-    @TInject
-    val command = CommandBuilder.create("adytags", AdyTags.plugin)
-        .execute { sender, args ->
-            AdyTags.conf.reload()
-            reload()
-            sender.sendMessage("&c[System] &7Successful.".colored())
-        }!!
+class AdyTags : Trait(), Listener {
 
     val map = HashMap<String, ArrayList<Hologram>>()
 
+    init {
+        KnownTraits.traits.add(this)
+    }
+
+    override fun getName(): String {
+        return "tags"
+    }
+
+    override fun edit(player: Player, entityInstance: EntityInstance) {
+        player.sendLocale("trait-tags")
+        Inputs.bookIn(player) {
+            if (it.all { line -> line.isBlank() }) {
+                data.set(entityInstance.uniqueId, null)
+            } else {
+                data.set(entityInstance.uniqueId, it)
+            }
+            player.sendLocale("trait-tags-finish")
+        }
+    }
+
     fun refresh(entity: EntityInstance) {
-        if (AdyTags.conf.contains("npc-tag.${entity.id}")) {
+        if (data.contains(entity.uniqueId)) {
             val holograms = ArrayList<Hologram>()
             val loc = entity.getLocation().add(0.0, entity.entityType.entitySize.height + 0.25, 0.0)
-            val message = AdyTags.conf.get("npc-tag.${entity.id}")!!.asList().colored()
+            val message = data.get(entity.uniqueId)!!.asList().colored()
             message.forEachIndexed { index, content ->
                 holograms.add(THologram.create(loc.clone().add(0.0, (((message.size - 1) - index) * 0.3), 0.0), content).also {
                     if (content.isNotEmpty()) {

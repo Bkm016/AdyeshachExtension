@@ -1,0 +1,11 @@
+trait-tags-finish: '§c[Adyeshach] §7Trait Edited.'
+trait-tags:
+  ==: TITLE
+  title: '§3§lTags Traits'
+  subtitle: '§7Open book and input tags content'
+  fadein: 10
+  stay: 40
+  fadeout: 10
+
+trait-papi-on: '§c[Adyeshach] §7Trait (papi-name) &aON.'
+trait-papi-off: '§c[Adyeshach] §7Trait (papi-name) &cOFF.'
