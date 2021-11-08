@@ -22,7 +22,6 @@ import org.bukkit.event.Listener
  * @author sky
  * @since 2021/5/3 5:53 下午
  */
-@TListener
 class AdyPlaceholder : Trait(), Listener {
 
     init {
@@ -63,7 +62,7 @@ class AdyPlaceholder : Trait(), Listener {
     fun EntityInstance.isPapi() = data.getBoolean("${uniqueId}.state")
 
     fun EntityInstance.isPapiNext() = if (data.getLong("${uniqueId}.update") < System.currentTimeMillis()) {
-        data.set("${uniqueId}.update", System.currentTimeMillis() + AdyExtension.conf.getInt("papi-name-update-pariod"))
+        data.set("${uniqueId}.update", System.currentTimeMillis() + AdyExtension.conf.getInt("papi-name-update-period"))
         true
     } else false
 }
